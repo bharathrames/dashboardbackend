@@ -4,11 +4,21 @@ const cors = require('cors');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT;
-app.use(cors({
-  // origin:"http://localhost:3000"
-  origin:"https://transactionsdashboard.netlify.app/"
-}))
+// app.use(cors({
+//   // origin:"http://localhost:3000"
+//   origin:"https://transactionsdashboard.netlify.app/"
+// }))
 
+const allowedOrigins = ['https://transactionsdashboard.netlify.app'];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
